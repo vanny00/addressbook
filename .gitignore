@@ -1,2 +1,5 @@
 addressbook.iml
 target
+.classpath
+.settings
+.project
