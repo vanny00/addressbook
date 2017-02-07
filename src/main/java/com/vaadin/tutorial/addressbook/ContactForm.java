@@ -25,11 +25,13 @@ public class ContactForm extends FormLayout {
 
     Button save = new Button("Save", this::save);
     Button cancel = new Button("Cancel", this::cancel);
+    Button delete = new Button("Delete", this::delete);
     TextField firstName = new TextField("First name");
     TextField lastName = new TextField("Last name");
-    TextField phone = new TextField("Phone");
-    TextField email = new TextField("Email");
-    DateField birthDate = new DateField("Birth date");
+    DateField startDate = new DateField("Start Date");
+    TextField task = new TextField("Task");
+    DateField endDate = new DateField("Expected End Date");
+    
 
     Contact contact;
 
@@ -57,10 +59,11 @@ public class ContactForm extends FormLayout {
         setSizeUndefined();
         setMargin(true);
 
-        HorizontalLayout actions = new HorizontalLayout(save, cancel);
+        HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
         actions.setSpacing(true);
+        delete.setVisible(false);
 
-        addComponents(actions, firstName, lastName, phone, email, birthDate);
+        addComponents(actions, firstName, lastName, task, startDate, endDate);
     }
 
     /*
@@ -95,18 +98,40 @@ public class ContactForm extends FormLayout {
         // Place to call business logic.
         Notification.show("Cancelled", Type.TRAY_NOTIFICATION);
         getUI().contactList.select(null);
+        getUI().refreshContacts();
+        
+    }
+    
+    public void delete(Button.ClickEvent event) {
+        // Place to call business logic.
+        Notification.show("Deleted", Type.TRAY_NOTIFICATION);
+        getUI().service.delete(contact);
+        getUI().refreshContacts();
     }
 
     void edit(Contact contact) {
+    	delete.setVisible(true);
         this.contact = contact;
         if (contact != null) {
-            // Bind the properties of the contact POJO to fiels in this form
+            // Bind the properties of the contact POJO to fields in this form
             formFieldBindings = BeanFieldGroup.bindFieldsBuffered(contact,
                     this);
             firstName.focus();
         }
         setVisible(contact != null);
     }
+    
+    void editTask(Contact contact) {
+        this.contact = contact;
+        if (contact != null) {
+            // Bind the properties of the contact POJO to fields in this form
+            formFieldBindings = BeanFieldGroup.bindFieldsBuffered(contact,
+                    this);
+            firstName.focus();
+        }
+        setVisible(contact != null);
+    }
+    
 
     @Override
     public AddressbookUI getUI() {
