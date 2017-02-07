@@ -122,6 +122,7 @@ public class ContactForm extends FormLayout {
     }
     
     void editTask(Contact contact) {
+    	delete.setVisible(false);
         this.contact = contact;
         if (contact != null) {
             // Bind the properties of the contact POJO to fields in this form
